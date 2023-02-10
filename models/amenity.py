@@ -1,1 +1,3 @@
-import 
+
+class Amenity:
+    pass

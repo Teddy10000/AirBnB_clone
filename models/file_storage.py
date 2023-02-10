@@ -64,8 +64,12 @@ class FileStorage:
             new_data = json.load(f)
             
         for key , value in new_data.items(): 
+            "when turns to dictionaey the object class is stored in the __class__ key"
+            "How do you get the dictionary into python objects"
+            "in objects we have a class and in the class takes the attributes"
             obj_class = self.class_dict[value['__class__']]
             obj_args = {k: v for k, v in value.items() if k != '__class__'}
+            """Creating the object class from the dictionary where the classname is obtained"""
             obj = obj_class(**obj_args)
             self.__objects[key] = obj
             
