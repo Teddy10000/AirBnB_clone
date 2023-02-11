@@ -32,6 +32,49 @@ class BaseModel:
         DATE_FORMAT= '%Y-%m-%dT%H:%M:%S.%f'
         if not kwargs:
             self.id = str(uuid4())
-            self.created_at = datetime.utcnow()
-            self.updated_at = datetime.utcnow()
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
+            
             models.storage.new(self)
+        "How to treat dictionary models loop through" 
+        for key, value in kwargs.items():
+                if key == '__class__':
+                    continue
+                if key == "created_at" or key == "updated_at":
+                    value = datetime.fromisoformat(value)
+                setattr(self, key, value) 
+                
+        "Returning a string instance"
+        
+        def __str__(self):
+            return "[{}] ({}) {}".format(
+            type(self).__name__, self.id, self.__dict__)
+            
+            
+        def save(self):
+            """
+            updates the public instance attribute
+            updated_at with the current datetime
+            """
+            self.updated_at = datetime.now()
+            models.storage.save()
+            
+            
+        def to_dic(self):
+            "returns dic of all the keys and values of _dic__"
+            
+            "unpacking the content of the __dic__ to new dic"
+            dic = {**self.__dic__}
+            
+            "creating the class with 'key and changing the format of classes objects'"
+            dic["__class__"] = type(self).__name__
+            dic["created_at"] = dic["created_at"].isoformat()
+            dic['updated_at'] = dic['updated_at'].isoformat()
+            
+            
+            return dic
+            
+            
+            
+            
+        
